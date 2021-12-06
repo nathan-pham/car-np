@@ -138,7 +138,7 @@ public class UtilsNP {
     public static void error(String fromWhere, String message, String action) {
 
 
-        System.out.printf("ERROR: %s: $s; %s\n", fromWhere, message, action);
+        System.out.printf("ERROR: %s: %s; %s\n", fromWhere, message, action);
 
     }
     
@@ -187,7 +187,8 @@ public class UtilsNP {
         else {
 
             // print error
-            System.out.printf("\nERROR: provided birthdate %s is after reference date %s: age = -1\n", dateBd, dateRef);
+            // silence error message 4 now
+            // System.out.printf("\nERROR: provided birthdate %s is after reference date %s: age = -1\n", dateBd, dateRef);
 
         }
 
