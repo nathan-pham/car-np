@@ -145,10 +145,6 @@ class CarNP {
         System.out.printf("%-35s %,.2f\n", "remaining travel range [miles]:", getTripRange());
         System.out.printf("%-35s %,.2f\n", "current MPG [miles/gal]", getMPG());
         
-        // optional data
-
-        // System.out.printf();
-
     }
 
     // display all instance variables and derived data in a label-value format preceded by a formatted box message 
@@ -199,10 +195,12 @@ class CarNP {
 
     public void setYear(int year) {
 
+        // year must be greater than 1900
         if(year >= 1900) {
             this.year = year;
         }
 
+        // otherwise, print error
         else {
             UtilsNP.error("setYear(int year)", "year must be greater than or equal to 1900", "no change made");
         }
@@ -220,10 +218,12 @@ class CarNP {
 
     public void setOdometer(double odometer) {
 
+        // odometer must be greater than or equal to 0
         if(odometer >= 0.0) {
             this.odometer = odometer;
         }
 
+        // otherwise, print error
         else {
             UtilsNP.error("setOdometer(double odometer)", "odometer must be greater than or equal to 0", "no change made");
         }
@@ -241,12 +241,15 @@ class CarNP {
 
     public void setTankLevel(double tankLevel) {
 
+        // tank level must be greater than or equal to 0
         if(tankLevel >= 0.0) {
 
+            // tank level must be less than or equal to tank size
             if(tankLevel <= getTankSize()) {
                 this.tankLevel = tankLevel;
             }
 
+            // otherwise, print error
             else {
 
                 UtilsNP.error("setTankLevel(double tankLevel)", "tank level must be less than or equal to tank size", "no change made");
@@ -255,6 +258,7 @@ class CarNP {
 
         }
 
+        // otherwise, print error
         else {
             UtilsNP.error("setTankLevel(double tankLevel)", "tank level must be greater than or equal to 0", "no change made");
         }
@@ -272,12 +276,15 @@ class CarNP {
 
     public void setTankSize(double tankSize) {
 
+        // tank size must be greater than or equal to 0
         if(tankSize >= 0.0) {
 
+            // tank size must be greater than or equal to tank level
             if(tankSize >= getTankLevel()) {
                 this.tankSize = tankSize;
             }
 
+            // otherwise, print error
             else {
 
                 UtilsNP.error("setTankSize(double tankSize)", "tank size must be greater than or equal to tank level", "no change made");
@@ -286,6 +293,7 @@ class CarNP {
 
         }
 
+        // otherwise, print error
         else {
             UtilsNP.error("setTankSize(double tankSize)", "tank size must be greater than or equal to 0", "no change made");
 
@@ -323,10 +331,12 @@ class CarNP {
 
     public void setSalePrice(double salePrice) {
 
+        // sale price must be greater than or equal to 0
         if(salePrice >= 0.0) {
             this.salePrice = salePrice;
         }
 
+        // otherwise, print error
         else {
             UtilsNP.error("setSalePrice(double salePrice)", "sale price must be greater than or equal to 0", "no change made");
         }
@@ -387,23 +397,17 @@ class CarNP {
 
         // car is a prototype if age < 0
         if(age < 0) {
-
             return "prototype";
-
         } 
         
         // car is new and unused
         else if(age == 0) {
-
             return "new";
-
         } 
         
         // car has been used before
         else {
-
             return "used";
-
         }
 
     }
@@ -412,12 +416,12 @@ class CarNP {
 
         double salePrice = getSalePrice();
 
+        // depreciation year must be equal to 5 or 8
         if(deprYear == 5 || deprYear == 8) {
-
             return getAge() <= 0 ? salePrice : salePrice - (getAge() * salePrice / (float) deprYear);
-
         }
 
+        // otherwise, print error
         else {
 
             UtilsNP.error("getValue(int deprYear)", "depreciation year must be 5 or 8", "return salePrice");
@@ -485,30 +489,26 @@ class CarNP {
     // add more fuel to the tank
     public void fuel(double gallons) {
 
-        // gallons must be positive
+        // gallons must be greater than 0
         if(gallons > 0) {
 
             double tankLevel = getTankLevel() + gallons;
 
             // new tank level must be lower than the tank size
             if(tankLevel < getTankSize()) {
-
                 setTankLevel(tankLevel);
-
             }
 
+            // otherwise, print error
             else {
-
                 UtilsNP.error("fuel(double gallons)", "tank level must be less than or equal to tank size", "no change made");
-
             }
 
         }
 
+        // otherwise, print error
         else {
-                
             UtilsNP.error("fuel(double gallons)", "gallons must be greater than or equal to 0", "no change made");
-    
         }
 
     }
