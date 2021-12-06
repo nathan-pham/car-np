@@ -143,8 +143,6 @@ class CarNP {
     // display primary variables in advertisement-like format
     public void display() {
 
-        // TODO: display MPG & last sold values
-        // 20.0 gal tank 25.0 MPG 50,000.0 miles last sold 000/000/000 30,000.000 est. value $22,500.00
         System.out.printf("FOR SALE: used %s %s %s\n%s gal tank %s MPG %.2f miles\nlast sold %s $%.2f est. value $%.2f", getYear(), getMake(), getModel(), getTankSize(), getMPG(), getTankSize() * getMPG(), getSaleDate(), getSalePrice(), getValue(8));
 
     }
@@ -391,6 +389,7 @@ class CarNP {
 
     }
 
+    // return current fuel level as a percent of tank size
     public double getFuelPct() {
 
         double tankSize = getTankSize();
@@ -398,18 +397,17 @@ class CarNP {
 
     }
 
+    // return full range of car
     public double getFullRange() {
-
         return getTankSize() * getMPG();
-
     }
 
+    // return remaining range of car
     public double getTripRange() {
-
         return getTankLevel() * getMPG();
-    
     }
 
+    // returns current miles / gallon
     public double getMPG() {
 
         _tripMPG = _tripGallons == 0 ? _tripMPG : _tripMiles / _tripGallons;
@@ -435,10 +433,8 @@ class CarNP {
     // allows user to drive the car some specified distance at a specified MPG rate
     public void drive(double miles, double mpg) {
 
-        // update trip miles and gallons
-        _tripMiles += miles;
-        _tripGallons += miles / mpg;
-
+        _tripMiles = miles;
+        _tripGallons = miles / mpg;
 
     }
 
@@ -450,8 +446,31 @@ class CarNP {
     // add more fuel to the tank
     public void fuel(double gallons) {
 
-        // getTankSize();
-        // setTankLevel(getTankLevel() + gallons);
+        // gallons must be positive
+        if(gallons > 0) {
+
+            double tankLevel = getTankLevel() + gallons;
+
+            // new tank level must be lower than the tank size
+            if(tankLevel < getTankSize()) {
+
+                setTankLevel(tankLevel);
+
+            }
+
+            else {
+
+                UtilsNP.error("fuel(double gallons)", "tank level must be less than or equal to tank size", "no change made");
+
+            }
+
+        }
+
+        else {
+                
+            UtilsNP.error("fuel(double gallons)", "gallons must be greater than or equal to 0", "no change made");
+    
+        }
 
     }
 
@@ -617,19 +636,17 @@ class CarNP {
     public static void main(String[] args) {
 
 
-        CarNP car = new CarNP();
-        car.display();
         // run tests
-        // runTest1();
-        // runTest2();
-        // runTest3();
-        // runTest4();
-        // runTest5();
-        // runTest6();
+        runTest1();
+        runTest2();
+        runTest3();
+        runTest4();
+        runTest5();
+        runTest6();
         
-        // // end of tests
-        // UtilsNP.blank();
-        // UtilsNP.message("End of Tests", true);
+        // end of tests
+        UtilsNP.blank();
+        UtilsNP.message("End of Tests", true);
 
     }
 
