@@ -29,6 +29,9 @@ class CarNP {
     private CS12Date saleDate;
     private double salePrice;
 
+    // hidden variables
+    double _tripMiles, _tripGallons, _tripMPG;
+
     // creates a new CarNP with default variables
     // wasn't outlined in the program spec but it does reduce redundancy
     private void defaultCarNP() {
@@ -44,6 +47,10 @@ class CarNP {
 
         setSaleDate(new CS12Date());
         setSalePrice(0.0);
+
+        _tripMiles = 0.0;
+        _tripGallons = 0.0;
+        _tripMPG = 25.0;
 
     }
 
@@ -125,11 +132,20 @@ class CarNP {
 
     }
 
-    // display all instance vriables and derived data in a label-value format preceded by a formatted box message 
+    // display all instance variables and derived data in a label-value format preceded by a formatted box message 
     public void print(String message) {
 
         UtilsNP.message(message, true);
         print();
+
+    }
+
+    // display primary variables in advertisement-like format
+    public void display() {
+
+        // TODO: display MPG & last sold values
+        // 20.0 gal tank 25.0 MPG 50,000.0 miles last sold 000/000/000 30,000.000 est. value $22,500.00
+        System.out.printf("FOR SALE: used %s %s %s\n%s gal tank %s MPG %.2f miles\nlast sold %s $%.2f est. value $%.2f", getYear(), getMake(), getModel(), getTankSize(), getMPG(), getTankSize() * getMPG(), getSaleDate(), getSalePrice(), getValue(8));
 
     }
 
@@ -165,7 +181,15 @@ class CarNP {
     }
 
     public void setYear(int year) {
-        this.year = year;
+
+        if(year >= 1900) {
+            this.year = year;
+        }
+
+        else {
+            UtilsNP.error("setYear(int year)", "year must be greater than or equal to 1900", "no change made");
+        }
+
     }
 
     public void setYear(boolean guiMode) {
@@ -178,7 +202,15 @@ class CarNP {
     }
 
     public void setOdometer(double odometer) {
-        this.odometer = odometer;
+
+        if(odometer >= 0.0) {
+            this.odometer = odometer;
+        }
+
+        else {
+            UtilsNP.error("setOdometer(double odometer)", "odometer must be greater than or equal to 0", "no change made");
+        }
+
     }
 
     public void setOdometer(boolean guiMode) {
@@ -191,7 +223,25 @@ class CarNP {
     }
 
     public void setTankLevel(double tankLevel) {
-        this.tankLevel = tankLevel;
+
+        if(tankLevel >= 0.0) {
+
+            if(tankLevel <= getTankSize()) {
+                this.tankLevel = tankLevel;
+            }
+
+            else {
+
+                UtilsNP.error("setTankLevel(double tankLevel)", "tank level must be less than or equal to tank size", "no change made");
+
+            }
+
+        }
+
+        else {
+            UtilsNP.error("setTankLevel(double tankLevel)", "tank level must be greater than or equal to 0", "no change made");
+        }
+
     }
 
     public void setTankLevel(boolean guiMode) {
@@ -236,7 +286,15 @@ class CarNP {
     }
 
     public void setSalePrice(double salePrice) {
-        this.salePrice = salePrice;
+
+        if(salePrice >= 0.0) {
+            this.salePrice = salePrice;
+        }
+
+        else {
+            UtilsNP.error("setSalePrice(double salePrice)", "sale price must be greater than or equal to 0", "no change made");
+        }
+
     }
 
     public void setSalePrice(boolean guiMode) {
@@ -244,7 +302,6 @@ class CarNP {
     }
 
     // determine equality
-     
     public boolean equals(Object obj) {
         
         // check object is a CarNP object
@@ -278,6 +335,133 @@ class CarNP {
 
     }
 
+    // derived data accessors
+    // get method for age
+    public int getAge() {
+        
+        // use UtilsNP to get age of car using the 1/1/model year
+        return UtilsNP.getAge(new CS12Date(1, 1, this.getYear()));
+
+    }    
+
+    // get method for status
+    public String getStatus() {
+
+        int age = getAge();
+
+        // car is a prototype if age < 0
+        if(age < 0) {
+
+            return "prototype";
+
+        } 
+        
+        // car is new and unused
+        else if(age == 0) {
+
+            return "new";
+
+        } 
+        
+        // car has been used before
+        else {
+
+            return "used";
+
+        }
+
+    }
+
+    public double getValue(int deprYear) {
+
+        double salePrice = getSalePrice();
+
+        if(deprYear == 5 || deprYear == 8) {
+
+            return Math.max(salePrice - (getAge() / deprYear), 0);
+
+        }
+
+        else {
+
+            UtilsNP.error("getValue(int deprYear)", "depreciation year must be 5 or 8", "return salePrice");
+            return salePrice;
+
+        }
+
+    }
+
+    public double getFuelPct() {
+
+        double tankSize = getTankSize();
+        return tankSize == 0 ? 0 : getTankLevel() / tankSize;
+
+    }
+
+    public double getFullRange() {
+
+        return getTankSize() * getMPG();
+
+    }
+
+    public double getTripRange() {
+
+        return getTankLevel() * getMPG();
+    
+    }
+
+    public double getMPG() {
+
+        _tripMPG = _tripGallons == 0 ? _tripMPG : _tripMiles / _tripGallons;
+        return _tripMPG;
+
+    }
+
+    // utility methods
+    // update all instance variables at once with prompts
+    public void update(boolean guiMode) {
+
+        setMake(guiMode);
+        setModel(guiMode);
+        setYear(guiMode);
+        setOdometer(guiMode);
+        setTankLevel(guiMode);
+        setTankSize(guiMode);
+        setSaleDate(guiMode);
+        setSalePrice(guiMode);
+        
+    }
+
+    // allows user to drive the car some specified distance at a specified MPG rate
+    public void drive(double miles, double mpg) {
+
+        // update trip miles and gallons
+        _tripMiles += miles;
+        _tripGallons += miles / mpg;
+
+
+    }
+
+    // allows user to drive the car some specified distance using the current MPG rate
+    public void drive(double miles) {
+        drive(miles, getMPG());
+    }
+
+    // add more fuel to the tank
+    public void fuel(double gallons) {
+
+        // getTankSize();
+        // setTankLevel(getTankLevel() + gallons);
+
+    }
+
+    // sell the car for a specified price on a given date
+    public void sell(double price, CS12Date date) {
+
+        setSalePrice(price);
+        setSaleDate(date);
+
+    }
 
     // Test 1: initialize some Car objects
     public static void runTest1() {
@@ -405,14 +589,7 @@ class CarNP {
 
         UtilsNP.blank();
         System.out.println("All instance variables updated using prompts");
-        car1.setMake(false);
-        car1.setModel(false);
-        car1.setYear(false);
-        car1.setOdometer(false);
-        car1.setTankLevel(false);
-        car1.setTankSize(false);
-        car1.setSaleDate(false);
-        car1.setSalePrice(false);
+        car1.update(false);
 
         UtilsNP.blank();
         car1.print("Default car updated");
@@ -439,17 +616,20 @@ class CarNP {
     // main method
     public static void main(String[] args) {
 
+
+        CarNP car = new CarNP();
+        car.display();
         // run tests
-        runTest1();
-        runTest2();
-        runTest3();
-        runTest4();
-        runTest5();
-        runTest6();
+        // runTest1();
+        // runTest2();
+        // runTest3();
+        // runTest4();
+        // runTest5();
+        // runTest6();
         
-        // end of tests
-        UtilsNP.blank();
-        UtilsNP.message("End of Tests", true);
+        // // end of tests
+        // UtilsNP.blank();
+        // UtilsNP.message("End of Tests", true);
 
     }
 

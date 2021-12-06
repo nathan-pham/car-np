@@ -133,6 +133,14 @@ public class UtilsNP {
         return readString(prompt, guiMode).charAt(0);
 
     }
+
+    // format an error
+    public static void error(String fromWhere, String message, String action) {
+
+
+        System.out.printf("ERROR: %s: $s; %s\n", fromWhere, message, action);
+
+    }
     
     //---------------------------------------------------------------------------
     // age-related methods
