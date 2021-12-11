@@ -29,13 +29,16 @@ class CarNP {
     private CS12Date saleDate;
     private double salePrice;
 
+    // constant variables
+    private final double THRESHOLD = .0001;
+
     // hidden variables
     double _tripMiles, _tripGallons, _tripMPG;
 
     // creates a new CarNP with default variables
-    // wasn't outlined in the program spec but it does reduce redundancy
-    private void defaultCarNP() {
+    public CarNP() {
 
+        // initialize default variables
         setMake("Sierra");
         setModel("Wolverine");
 
@@ -54,18 +57,11 @@ class CarNP {
 
     }
 
-    public CarNP() {
-
-        // initialize default variables
-        defaultCarNP();
-
-    }
-
     // creates a new CarNP with specified variables
     public CarNP(String make, String model, int year, double odometer, double tankLevel, double tankSize, CS12Date saleDate, double salePrice) {
 
         // initialize default variables
-        defaultCarNP();
+        this();
 
 
         setMake(make);
@@ -86,7 +82,7 @@ class CarNP {
     public CarNP(String make, String model, int year) {
 
         // initialize default variables
-        defaultCarNP();
+        this();
 
         // override default variables with specified variables
         setMake(make);
@@ -99,7 +95,7 @@ class CarNP {
     public CarNP(String make, String model, double odometer) {
 
         // initialize default variables
-        defaultCarNP();
+        this();
 
         // override default variables with specified variables
         setMake(make);
@@ -360,12 +356,13 @@ class CarNP {
             if (this.getMake().equals(temp.getMake()) &&
                 this.getModel().equals(temp.getModel()) &&
                 this.getYear() == temp.getYear() &&
-                this.getOdometer() == temp.getOdometer() &&
-                this.getTankLevel() == temp.getTankLevel() &&
-                this.getTankSize() == temp.getTankSize() &&
+                Math.abs(this.getOdometer() - temp.getOdometer()) < THRESHOLD &&
+                Math.abs(this.getTankLevel() - temp.getTankLevel()) < THRESHOLD &&
+                Math.abs(this.getTankSize() - temp.getTankSize()) < THRESHOLD &&
                 this.getSaleDate().equals(temp.getSaleDate()) &&
                 this.getSalePrice() == temp.getSalePrice()) {
                 return true;
+
             }
             
             // one or more fields differ, not same date
