@@ -125,7 +125,7 @@ class CarNP {
         // print instance variables
         System.out.printf("%-35s %s\n", "Make:", getMake());
         System.out.printf("%-35s %s\n", "Model:", getModel());
-        System.out.printf("%-35s %d\n", "Year:", getYear());
+        System.out.printf("%-35s %d\n", "Model Year:", getYear());
         System.out.printf("%-35s %,.2f\n", "Odometer [miles]:", getOdometer());
         System.out.printf("%-35s %,.2f\n", "Tank level [gallons]:", getTankLevel());
         System.out.printf("%-35s %,.2f\n", "Tank size [gallons]:", getTankSize());
